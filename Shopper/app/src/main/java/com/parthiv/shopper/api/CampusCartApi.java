@@ -21,6 +21,6 @@ public interface CampusCartApi {
     Observable<List<Item>> getItems();
 
     @GET("items/{id}")
-    Observable<Item> getItems(@Path("id") long id);
+    Observable<Item> getItemById(@Path("id") long id);
 
 }

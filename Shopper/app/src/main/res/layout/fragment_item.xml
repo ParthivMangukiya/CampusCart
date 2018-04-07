@@ -16,11 +16,23 @@
         android:text="@string/noItem"
         android:textAppearance="?android:textAppearanceMedium" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/item_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            tools:listitem="@layout/list_item_item_item" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/item_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/list_item_item_item" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="18dp"
+        android:layout_marginEnd="16dp"
+        android:clickable="true"
+        app:srcCompat="@android:drawable/ic_input_add"
+        />
 
 </RelativeLayout>

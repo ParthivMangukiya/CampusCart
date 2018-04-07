@@ -47,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
             viewPager.setAdapter(mainActivityPagerAdapter);
 
         } else {
-            EasyPermissions.requestPermissions(this, getString(R.string.internet_permission),
-                    RC_INTERNET, perms);
+            EasyPermissions.requestPermissions(this, getString(R.string.internet_permission), RC_INTERNET, perms);
         }
     }
 

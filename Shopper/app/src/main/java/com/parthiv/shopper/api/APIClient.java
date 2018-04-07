@@ -79,7 +79,7 @@ public final class APIClient {
                     .client(okHttpClient)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(JacksonConverterFactory.create(getObjectMapper()))
-                    .baseUrl("http://172.23.0.71/CampusCart/api/v1/")
+                    .baseUrl("http://192.168.43.46/CampusCart/api/v1/")
                     .build()
                     .create(CampusCartApi.class);
         }
