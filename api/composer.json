@@ -1,0 +1,13 @@
+{
+    "name": "vendor/travel-web-api",
+    "description": "Description of project TravelWebApi.",
+    "authors": [
+        {
+            "name": "apple",
+            "email": "your@email.here"
+        }
+    ],
+    "require": {
+        "slim/slim-skeleton": "dev-master"
+    }
+}
