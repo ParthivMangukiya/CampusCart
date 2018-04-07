@@ -4,7 +4,7 @@
     <item
         android:id="@+id/action_items"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/ic_local_grocery_store_black_24dp"
         android:title="@string/text_items"
         app:showAsAction="ifRoom" />
 </menu>

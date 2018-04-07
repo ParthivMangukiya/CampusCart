@@ -25,9 +25,11 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/holo_purple"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/description"
         app:layout_constraintTop_toTopOf="@+id/textView3"
-        tools:text="Pencil"/>
+        tools:text="Pencil" />
 
     <TextView
         android:id="@+id/description"
@@ -35,18 +37,22 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:textColor="@android:color/holo_purple"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toTopOf="@+id/textView4"
-        tools:text="description"/>
+        tools:text="description" />
 
     <TextView
         android:id="@+id/category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/holo_purple"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/description"
         app:layout_constraintTop_toTopOf="@+id/textView5"
-        tools:text="category"/>
+        tools:text="category" />
 
     <TextView
         android:id="@+id/textView3"
@@ -56,8 +62,10 @@
         android:layout_marginStart="64dp"
         android:layout_marginTop="32dp"
         android:text="Name"
+        android:textColor="@android:color/background_dark"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemImageView"/>
+        app:layout_constraintTop_toBottomOf="@+id/itemImageView" />
 
     <TextView
         android:id="@+id/textView4"
@@ -65,8 +73,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="Description"
+        android:textColor="@android:color/background_dark"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/textView3"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"/>
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <TextView
         android:id="@+id/textView5"
@@ -74,6 +84,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="Category"
+        android:textColor="@android:color/background_dark"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"/>
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 </android.support.constraint.ConstraintLayout>

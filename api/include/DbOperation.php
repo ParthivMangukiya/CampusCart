@@ -105,7 +105,7 @@ class DbOperation {
     }
 
     private function isUserExists($firebase_uid) {
-        $stmt = $this->con->prepare("SELECT user_id from user WHERE firebase_uid = ?");
+        $stmt = $this->con->prepare("SELECT id from user WHERE firebase_uid = ?");
         if ($stmt) {
             $stmt->bind_param("s", $firebase_uid);
             $stmt->execute();
@@ -118,10 +118,10 @@ class DbOperation {
         }
     }
 
-    public function getItemById($user_id) {
+    public function getItemById($id) {
         $stmt = $this->con->prepare("SELECT * FROM item WHERE id=?");
         if($stmt){
-            $stmt->bind_param("i", $user_id);
+            $stmt->bind_param("i", $id);
             $stmt->execute();
             $student = $stmt->get_result();
             $stmt->close();
