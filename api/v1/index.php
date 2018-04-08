@@ -23,7 +23,7 @@ $app->get('/users', function (Request $request, Response $response) {
 
         while($row = $result->fetch_assoc()){
             $user = [];
-            $user['user_id'] = $row['user_id'];
+            $user['id'] = $row['id'];
             $user['email'] = $row['email'];
             $user['name'] = $row['name'];
             $user['mobile_no'] = $row['mobile_no'];
@@ -31,7 +31,7 @@ $app->get('/users', function (Request $request, Response $response) {
             $user['date_of_registration'] = $row['date_of_registration'];
             $user['links'] = [];
             $selfLink = [];
-            $selfLink['href'] = $request->getUri() . '/' .$user['user_id'];
+            $selfLink['href'] = $request->getUri() . '/' .$user['id'];
             $selfLink['rel'] = 'self';
             array_push($user['links'], $selfLink);
             array_push($data['users'],$user);
@@ -56,7 +56,7 @@ $app->get('/users/{uid}', function (Request $request, Response $response) {
             $data = [];
             $row = $result->fetch_assoc();
             $user = [];
-            $user['user_id'] = $row['user_id'];
+            $user['id'] = $row['id'];
             $user['name'] = $row['name'];
             $user['email'] = $row['email'];
             $user['mobile_no'] = $row['mobile_no'];
@@ -71,9 +71,84 @@ $app->get('/users/{uid}', function (Request $request, Response $response) {
             $response = writeResponse($request, $response, $data, 200);
         }
         else{
+        	$result1 = $db->getUserByUserId($uid);
+		    
+		    if($result1){
+		        if($result1->num_rows > 0){
+		            $data = [];
+		            $data = [];
+		            $row = $result1->fetch_assoc();
+		            $user = [];
+		            $user['id'] = $row['id'];
+		            $user['name'] = $row['name'];
+		            $user['email'] = $row['email'];
+		            $user['mobile_no'] = $row['mobile_no'];
+		            $user['photo_url'] = $row['photo_url'];
+		            $user['date_of_registration'] = $row['date_of_registration'];
+		            $user['links'] = [];
+		            $selfLink = [];
+		            $selfLink['href'] = (string)$request->getUri();
+		            $selfLink['rel'] = 'self';
+		            array_push($user['links'], $selfLink);
+		            array_push($data,$user);
+		            $response = writeResponse($request, $response, $data, 200);
+		        }
+		    }
+		    else{
+	            $data = [];
+	            $data["status"] = "data not exists";
+	            $response = writeResponse($request, $response, $data, 404);
+        	}
+        }
+    }
+    else
+    {
+        $data = [];
+        $data["status"] = "Server Error";
+        $response = writeResponse($request, $response, $data, 500);
+    }
+    return $response;
+});
+
+$app->get('/orders/{id}', function (Request $request, Response $response) {
+    $db = new DbOperation();
+    $id = $request->getAttribute('id');
+    
+    $result = $db->getOrderById($id);
+    
+    if($result){
+        if($result->num_rows > 0){
+            
+            $row = $result->fetch_assoc();
+            $user = [];
+            $user['id'] = $row['id'];
+            $user['uid'] = $row['uid'];
+            $user['otp'] = $row['otp'];
+            $user['amount'] = $row['amount'];
+            $user['color'] = $row['color'];
+            $user['status'] = $row['status'];
+            $user['username'] = $row['username'];
+            $result1 = $db->getItemIdByOrderId($id);
+
+            $user['items'] = [];
+
+           	if($result1){
+
+           	}else{
+           		$data = [];
+           	 	$data["status"] = "data not exists";
+            	$response = writeResponse($request, $response, $user, 404);	
+           	}
+	        while($row = $result1->fetch_assoc()){
+	            array_push($user['items'],$row['iid']);
+	        }
+         
+            $response = writeResponse($request, $response, $user, 200);
+        }
+        else{
             $data = [];
             $data["status"] = "data not exists";
-            $response = writeResponse($request, $response, $data, 404);
+            $response = writeResponse($request, $response, $user, 404);
         }
     }
     else
@@ -91,48 +166,40 @@ $app->post('/users', function (Request $request, Response $response) {
 //    verifyRequiredParams(array('name', 'username', 'password'));
 
     //Creating a data array
-    $data = array();
+    $data = [];
 
     //reading post parameters
     $parsedBody = $request->getParsedBody();
     
     $name = getValueOrDefault('name',$parsedBody, "");
     $email = getValueOrDefault('email',$parsedBody, "");
-    $mobile_no = getValueOrDefault('mobile_no',$parsedBody, "");
-    $photo_url = getValueOrDefault('photo_url',$parsedBody, "");
-    $date_of_registration = getValueOrDefault('date_of_registration',$parsedBody,"" );
-    $firebase_uid = getValueOrDefault('firebase_uid',$parsedBody, "NULL");
     //Creating a DbOperation object
     $db = new DbOperation();
 
     //Calling the method createStudent to add student to the database
-    $res = $db->createUser($name, $email, $mobile_no, $photo_url, $date_of_registration, $firebase_uid);
+    $res = $db->createUser($name, $email, "", "", "", "");
 
     //If the result returned is 0 means success
     if ($res['error'] == 0) {
         //Making the data error false
-        $id = $res['id'];
-        $data["error"] = false;
-        //Adding a success message
-        $data["message"] = "You are successfully registered";
-        //Displaying data
-        $response = writeResponse($request, $response, $data, 201);
-        $data['links'] = [];
-        $selfLink = [];
-        $selfLink['href'] = $request->getUri() . $id;
-        $selfLink['rel'] = 'self';
-        array_push($data['links'], $selfLink);
-    //If the result returned is 1 means failure
+        $uid = $request->getAttribute($res['id']);
+        $data = [];
+        $data['id'] = $res['id'];
+  		$response = writeResponse($request, $response, $data, 200);
     } else if ($res['error'] == 1) {
         $data["error"] = true;
         $data["message"] = "Oops! An error occurred while registereing";
         $response = writeResponse($request, $response, $data, 500);
-
-    //If the result returned is 2 means user already exist
-    } else if ($res['error'] == 2) {
-        $data["error"] = true;
-        $data["message"] = "Sorry, this email already existed";
-        $response = writeResponse($request, $response, $data, 403);
+  } else if ($res['error'] == 2) {
+        $res = $db->getUserIdByEmailId($email);
+        //if($res)
+    	if($res->num_rows > 0){
+            $row = $res->fetch_assoc();
+            $uid = $row['id'];
+            $data = [];
+            $data['id'] = $uid;
+            $response = writeResponse($request, $response, $data, 200);
+        }
     }
     return $response;
 });
@@ -140,8 +207,45 @@ $app->post('/users', function (Request $request, Response $response) {
 
 $app->get('/items', function(Request $request, Response $response){
 	$db = new DbOperation();
-	$result = $db->getAllItems();
-	$data = [];
+
+	$params = $request->getQueryParams();
+	if($params)
+		$ids = $params['ids'];
+    if($params && $ids){
+    	$ids = urldecode($ids);
+    	$items = explode(',',$ids);
+    	$data = [];
+		foreach($items as $id){
+			    $result = $db->getItemById($id);
+    
+			    if($result){
+			        if($result->num_rows > 0){
+			            $row = $result->fetch_assoc();
+			            $user = [];
+			            $user['id'] = $row['id'];
+			            $user['price'] = $row['price'];
+			            $user['name'] = $row['name'];
+			            $user['category'] = $row['category'];
+			            $user['description'] = $row['description'];
+			            $user['imageUri'] = $row['imageUri'];
+			            array_push($data, $user);
+			     }
+				    else{
+					            $data = [];
+					            $data["status"] = "data not exists";
+					            $response = writeResponse($request, $response, $data, 404);
+			        }
+			    
+			    }
+		}
+		if($data != null){
+			            $response = writeResponse($request, $response, $data, 200);			
+		}else{
+            $response = writeResponse($request, $response, $data, 204);
+        }	
+    }else{
+    	$result = $db->getAllItems();
+		$data = [];
 
         while($row = $result->fetch_assoc()){
             $item = [];
@@ -157,7 +261,8 @@ $app->get('/items', function(Request $request, Response $response){
             $response = writeResponse($request, $response, $data, 200);
         }else{
             $response = writeResponse($request, $response, $data, 204);
-        }
+        }	
+    }
     return $response;
 });
 
@@ -267,6 +372,235 @@ $app->post('/items', function (Request $request, Response $response) {
     }
     return $response;
 });
+
+$app->post('/orders', function (Request $request, Response $response) {
+
+    //Verifying the required parameters
+//    verifyRequiredParams(array('name', 'username', 'password'));
+
+    //Creating a data array
+    $data = array();
+
+    //reading post parameters
+    $parsedBody = $request->getParsedBody();
+   
+    
+    //$id = getValueOrDefault('id',$parsedBody, "");
+    $uid = getValueOrDefault('uid',$parsedBody, "");
+    $otp = getValueOrDefault('otp',$parsedBody, "");
+    $amount = getValueOrDefault('amount',$parsedBody, "");
+    $color = getValueOrDefault('color', $parsedBody, "");
+    $status = getValueOrDefault('status',$parsedBody, "pending");
+    $iids = getValueOrDefault('ids',$parsedBody, "");
+    //Creating a DbOperation object
+    $db = new DbOperation();
+
+    //Calling the method createStudent to add student to the database
+    $res = $db->createOrder($uid, $otp, $amount,$color,$status);
+    
+    //If the result returned is 0 means success
+    if ($res['error'] == 0) {
+        //Making the data error false
+        $id = $res['id'];
+        if(is_array($iids) || is_object($iids)){
+        	foreach ($iids as $iid) {
+        		$res1 = $db->createOrderItems($id,$iid);	
+       		}
+        }
+        
+        
+        $data["error"] = false;
+        //Adding a success message
+        $data["message"] = "You have successfully inserted an item";
+        //Displaying data
+        $response = writeResponse($request, $response, $data, 201);
+        
+    //If the result returned is 1 means failure
+    } else if ($res['error'] == 1) {
+        $data["error"] = true;
+        $data["message"] = "Oops! An error occurred while inserting";
+        $response = writeResponse($request, $response, $data, 500);
+
+    //If the result returned is 2 means user already exist
+    } else if ($res['error'] == 2) {
+        $data["error"] = true;
+        $data["message"] = "Sorry, this item already existed";
+        $response = writeResponse($request, $response, $data, 403);
+    }
+    return $response;
+});
+
+$app->patch('/orders', function (Request $request, Response $response) {
+
+    //Verifying the required parameters
+//    verifyRequiredParams(array('name', 'username', 'password'));
+
+    //Creating a data array
+    $data = array();
+
+    //reading post parameters
+    $parsedBody = $request->getParsedBody();
+   
+    
+    $id = getValueOrDefault('id',$parsedBody, "");
+    $uid = getValueOrDefault('uid',$parsedBody, "");
+    $otp = getValueOrDefault('otp',$parsedBody, "");
+    $amount = getValueOrDefault('amount',$parsedBody, "");
+    $color = getValueOrDefault('color', $parsedBody, "");
+    $status = getValueOrDefault('status',$parsedBody, "pending");
+    $iids = getValueOrDefault('ids',$parsedBody, "");
+    //Creating a DbOperation object
+    $db = new DbOperation();
+
+    //Calling the method createStudent to add student to the database
+    $res = $db->updateOrder($id,$uid, $otp, $amount,$color,$status);
+    
+    //If the result returned is 0 means success
+    if ($res['error'] == 0) {
+        //Making the data error false
+        $id = $res['id'];
+        if(is_array($iids) || is_object($iids)){
+        	foreach ($iids as $iid) {
+        		$res1 = $db->updateOrderItems($id,$iid);	
+       		}
+        }
+        
+        
+        $data["error"] = false;
+        //Adding a success message
+        $data["message"] = "You have successfully updated an order";
+        //Displaying data
+        $response = writeResponse($request, $response, $data, 201);
+        
+    //If the result returned is 1 means failure
+    } else if ($res['error'] == 1) {
+        $data["error"] = true;
+        $data["message"] = "Oops! An error occurred while upadateing";
+        $response = writeResponse($request, $response, $data, 500);
+
+    //If the result returned is 2 means user already exist
+    } else if ($res['error'] == 2) {
+        $data["error"] = true;
+        $data["message"] = "Sorry, this order already existed";
+        $response = writeResponse($request, $response, $data, 403);
+    }
+    return $response;
+});
+
+$app->get('/orders', function (Request $request, Response $response) {
+    $db = new DbOperation();
+   // $id = $request->getAttribute('id');
+    
+        //$result = $db->getItemById($id);
+    $result = $db->getAllOrders();
+    if($result){
+    	$data=[];
+        if($result->num_rows > 0){
+            
+            /*$row = $result->fetch_assoc();*/
+            while($row = $result->fetch_assoc()){
+            $user = [];
+            $user['id'] = $row['id'];
+            $id = $row['id'];
+            $user['uid'] = $row['uid'];
+            $user['otp'] = $row['otp'];
+            $user['amount'] = $row['amount'];
+            $user['color'] = $row['color'];
+            $user['status'] = $row['status'];
+            $user['username'] = $row['username'];
+            $result1 = $db->getItemIdByOrderId($id);
+
+            $user['items'] = [];
+
+           	if($result1){
+
+           	}else{
+           		$data = [];
+           	 	$data["status"] = "data not exists";
+            	$response = writeResponse($request, $response, $user, 404);	
+           	}
+	        while($row = $result1->fetch_assoc()){
+	            array_push($user['items'],$row['iid']);
+	        }
+	        array_push($data,$user);
+        }
+         
+            $response = writeResponse($request, $response, $data, 200);
+        }
+
+        else{
+            $data = [];
+            $data["status"] = "data not exists";
+            $response = writeResponse($request, $response, $data, 404);
+        }
+    }
+    else
+    {
+        $data = [];
+        $data["status"] = "Server Error";
+        $response = writeResponse($request, $response, $data, 500);
+    }
+    return $response;
+        
+});
+
+$app->get('/users/{id}/orders', function (Request $request, Response $response) {
+    $db = new DbOperation();
+    $id = $request->getAttribute('id');
+    
+    //$result = $db->getItemById($id);
+    $result = $db->getAllOrdersById($id);
+    if($result){
+    	$data=[];
+        if($result->num_rows > 0){
+            
+            /*$row = $result->fetch_assoc();*/
+            while($row = $result->fetch_assoc()){
+            $user = [];
+            $user['id'] = $row['id'];
+            $id1 = $row['id'];
+            $user['uid'] = $row['uid'];
+            $user['otp'] = $row['otp'];
+            $user['amount'] = $row['amount'];
+            $user['color'] = $row['color'];
+            $user['status'] = $row['status'];
+            $user['username'] = $row['username'];
+            $result1 = $db->getItemIdByOrderId($id1);
+
+            $user['items'] = [];
+
+           	if($result1){
+
+           	}else{
+           		$data = [];
+           	 	$data["status"] = "data not exists";
+            	$response = writeResponse($request, $response, $user, 404);	
+           	}
+	        while($row = $result1->fetch_assoc()){
+	            array_push($user['items'],$row['iid']);
+	        }
+	        array_push($data,$user);
+        }
+         
+            $response = writeResponse($request, $response, $data, 200);
+        }
+
+        else{
+            $data = [];
+            $data["status"] = "data not exists";
+            $response = writeResponse($request, $response, $data, 404);
+        }
+    }
+    else
+    {
+        $data = [];
+        $data["status"] = "Server Error";
+        $response = writeResponse($request, $response, $data, 500);
+    }
+    return $response;
+        
+});
+
 
 function writeResponse($request,$response,$data,$status_code){
     $response = $response->withHeader('Content-type', 'application/json');
