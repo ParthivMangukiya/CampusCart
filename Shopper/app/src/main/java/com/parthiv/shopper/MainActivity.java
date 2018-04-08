@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
 
     BottomNavigationView mBottomNavigation;
     private static final int RC_INTERNET = 111;
+    private MainActivityPagerAdapter mMainActivityPagerAdapter;
     private ViewPager viewPager;
 
     @Override
@@ -20,10 +21,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mBottomNavigation = findViewById(R.id.bottom_navigation);
+        viewPager = findViewById(R.id.viewpager);
+        mMainActivityPagerAdapter = new MainActivityPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(mMainActivityPagerAdapter);
         mBottomNavigation.setOnNavigationItemSelectedListener(
                 item -> {
                     switch (item.getItemId()) {
                         case R.id.action_items:
+                            viewPager.setCurrentItem(0);
                             break;
                     }
                     return true;
