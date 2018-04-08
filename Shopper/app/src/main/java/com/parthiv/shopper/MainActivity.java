@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     @AfterPermissionGranted(RC_INTERNET)
     private void loadActivity() {
 
-        String[] perms = new String[]{Manifest.permission.ACCESS_NETWORK_STATE,Manifest.permission.INTERNET,Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        String[] perms = new String[]{Manifest.permission.ACCESS_NETWORK_STATE,Manifest.permission.INTERNET,Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
         if (EasyPermissions.hasPermissions(this, perms)) {
             viewPager = findViewById(R.id.viewpager);
             MainActivityPagerAdapter mainActivityPagerAdapter = new MainActivityPagerAdapter(getSupportFragmentManager());

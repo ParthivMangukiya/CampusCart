@@ -3,6 +3,6 @@
       xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/action_add"
           android:title="@string/add"
-          android:icon="@android:drawable/ic_input_add"
+          android:icon="@drawable/ic_add_black_24dp"
           app:showAsAction="ifRoom"/>
 </menu>

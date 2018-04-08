@@ -65,6 +65,7 @@ public class ItemDetailActivity extends AppCompatActivity {
                 if(item.getImageUri()!= null)
                     Picasso.with(this)
                             .load(Uri.parse(item.getImageUri()))
+                            .placeholder(R.drawable.ic_local_grocery_store_black_24dp)
                             .into(itemImageView);
                 if(ids.contains(item.getId())){
                     addToCartButton.setText("Remove From Cart");
