@@ -10,6 +10,7 @@ import com.parthiv.shopper.api.APIClient;
 import com.parthiv.shopper.model.Item;
 import com.parthiv.shopper.model.Order;
 
+import org.json.JSONObject;
 import org.reactivestreams.Publisher;
 
 import java.util.List;
@@ -25,6 +26,8 @@ public class OrderDetailViewModel extends ViewModel {
     private LiveData<Resource<Order>> mOrderDetailLiveData;
 
     private LiveData<Resource<List<Item>>> mItemLiveData;
+
+    public LiveData<Resource<JSONObject>> mOrderLiveData;
 
     public LiveData<Resource<Order>> getOrderLiveData(long id) {
         Publisher<Resource<Order>> publisher = APIClient.getCampusCartAPI()
@@ -60,5 +63,22 @@ public class OrderDetailViewModel extends ViewModel {
         mItemLiveData = LiveDataReactiveStreams.fromPublisher(publisher);
 
         return mItemLiveData;
+    }
+
+    public LiveData<Resource<JSONObject>> patchOrder(Order order) {
+        Publisher<Resource<JSONObject>> publisher = APIClient.getCampusCartAPI()
+                .patchOrder(order)
+                .map(Resource::success)
+                .onErrorReturn(throwable -> {
+                    Log.e(TAG,throwable.toString());
+                    return Resource.error(throwable.getMessage(), null);
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .toFlowable(BackpressureStrategy.BUFFER);
+
+        mOrderLiveData = LiveDataReactiveStreams.fromPublisher(publisher);
+
+        return mOrderLiveData;
     }
 }

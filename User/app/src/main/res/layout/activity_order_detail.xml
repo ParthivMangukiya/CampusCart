@@ -34,13 +34,42 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Total"/>
+            android:text="Total"
+            android:textColor="@android:color/background_dark"
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/priceTextView"
             tools:text="Rs 237"
             android:layout_marginLeft="16dp"
+            android:textColor="@android:color/background_dark"
+            android:textSize="18sp"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textViewOTP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/background_dark"
+            android:textSize="18sp"
+            android:text="OTP"/>
+
+        <TextView
+            android:id="@+id/otpTextView"
+            tools:text="234567"
+            android:layout_marginLeft="16dp"
+            android:layout_width="wrap_content"
+            android:textColor="@android:color/background_dark"
+            android:textSize="18sp"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 

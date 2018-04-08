@@ -25,7 +25,7 @@ public class CartViewModel extends ViewModel {
 
     private LiveData<Resource<List<Item>>> mItemLiveData;
 
-    private LiveData<Resource<JSONObject>> mOrderLiveData;
+    public LiveData<Resource<JSONObject>> mOrderLiveData;
 
     public LiveData<Resource<List<Item>>> getItemLiveData(String ids) {
 

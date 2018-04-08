@@ -29,6 +29,7 @@ public class OrderDetailActivity extends AppCompatActivity implements ItemAdapte
     private OrderDetailViewModel mOrderDetailViewModel;
     private TextView emptyView;
     private TextView priceTextView;
+    TextView otpTextView;
     private Order order;
 
     @SuppressLint("DefaultLocale")
@@ -44,11 +45,14 @@ public class OrderDetailActivity extends AppCompatActivity implements ItemAdapte
         itemRecycler.setItemAnimator(new DefaultItemAnimator());
         itemRecycler.setAdapter(mItemAdapter);
         priceTextView = findViewById(R.id.priceTextView);
+        otpTextView = findViewById(R.id.otpTextView);
+
         mOrderDetailViewModel = ViewModelProviders.of(this).get(OrderDetailViewModel.class);
         mOrderDetailViewModel.getOrderLiveData(id).observe(this,orderResource -> {
             if(orderResource.status == Resource.Status.SUCCESS){
                 order = orderResource.data;
                 priceTextView.setText(String.format("₹ %.2f",order.getAmount()));
+                otpTextView.setText(order.getOtp() + "");
                 List<Long> ids = order.getItems();
                 StringBuilder str = new StringBuilder();
                 for(Long iid : ids){

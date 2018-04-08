@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parthiv.shopper.R;
 import com.parthiv.shopper.Utils.Resource;
@@ -30,6 +31,7 @@ public class OrderDetailActivity extends AppCompatActivity implements ItemAdapte
     private OrderDetailViewModel mOrderDetailViewModel;
     private TextView emptyView;
     private TextView priceTextView;
+    private TextView otpTextView;
     private Button packBtn;
     private Order order;
 
@@ -47,11 +49,22 @@ public class OrderDetailActivity extends AppCompatActivity implements ItemAdapte
         itemRecycler.setAdapter(mItemAdapter);
         packBtn = findViewById(R.id.packBtn);
         priceTextView = findViewById(R.id.priceTextView);
+        otpTextView = findViewById(R.id.otpTextView);
         mOrderDetailViewModel = ViewModelProviders.of(this).get(OrderDetailViewModel.class);
         packBtn.setVisibility(View.GONE);
         packBtn.setOnClickListener((v) -> {
             order.setStatus("packed");
-            //mOrderDetailViewModel.patchOrder(order).observe();
+            mOrderDetailViewModel.patchOrder(order).observe(this, jsonObjectResource -> {
+                if(jsonObjectResource!= null && jsonObjectResource.status == Resource.Status.SUCCESS){
+                    Toast.makeText(this,"Order Packed",Toast.LENGTH_LONG).show();
+                    mOrderDetailViewModel.mOrderLiveData.removeObservers(this);
+                    packBtn.setText("Packed");
+                }else{
+                    mOrderDetailViewModel.mOrderLiveData.removeObservers(this);
+                    Toast.makeText(this,"Order Not Packed",Toast.LENGTH_LONG).show();
+                    packBtn.setText("Pack");
+                }
+            });
         });
         mOrderDetailViewModel.getOrderLiveData(id).observe(this,orderResource -> {
             if(orderResource.status == Resource.Status.SUCCESS){
@@ -62,6 +75,12 @@ public class OrderDetailActivity extends AppCompatActivity implements ItemAdapte
                 for(Long iid : ids){
                     str.append(iid).append(",");
                 }
+                if(order.getStatus().equals("pending")){
+                    packBtn.setText("Pack");
+                }else{
+                    packBtn.setText("Packed");
+                }
+                otpTextView.setText(order.getOtp() + "");
                 mOrderDetailViewModel.getItemLiveData(str.toString().substring(0,str.length()-1)).observe(this,listResource -> {
                     if(listResource.status == Resource.Status.SUCCESS){
                         mItemAdapter.updateList(listResource.data);

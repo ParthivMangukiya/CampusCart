@@ -34,4 +34,6 @@ public interface CampusCartApi {
     @GET("items/{id}")
     Observable<Item> getItemById(@Path("id") long id);
 
+    @POST("orders")
+    Observable<JSONObject> patchOrder(@Body Order order);
 }

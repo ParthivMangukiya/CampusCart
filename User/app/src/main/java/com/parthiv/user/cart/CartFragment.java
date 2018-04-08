@@ -91,20 +91,30 @@ public class CartFragment extends Fragment implements ItemAdapter.ItemClickListe
             long uid = SharedPreferenceUtils.getLongPreference(getActivity(),"uid",0);
             //Todo: add uid
             Order order = new Order(0,uid,"",otp,"pending",total,color,ids);
-
-            mCartViewModel.postOrder(order).observe(this, jsonObjectResource -> {
-                if(jsonObjectResource!= null && jsonObjectResource.status == Resource.Status.SUCCESS){
-                    Toast.makeText(getActivity(),"Order Placed",Toast.LENGTH_LONG).show();
-                    SharedPreferenceUtils.setStringPreference(getActivity(),"ids","");
-                    mItemAdapter.updateList(new ArrayList<>());
-                }else{
-                    Toast.makeText(getActivity(),"Order Not Placed",Toast.LENGTH_LONG).show();
-                }
-            });
+            postOrder(order);
         });
         refresh();
 
         return rootView;
+    }
+
+    public void postOrder(Order order){
+        mCartViewModel.postOrder(order).observe(this, jsonObjectResource -> {
+            if(jsonObjectResource!= null && jsonObjectResource.status == Resource.Status.SUCCESS){
+                Toast.makeText(getActivity(),"Order Placed",Toast.LENGTH_LONG).show();
+                SharedPreferenceUtils.setStringPreference(getActivity(),"ids","");
+                priceTextView.setVisibility(View.GONE);
+                textView.setVisibility(View.GONE);
+                purchaseBtn.setVisibility(View.GONE);
+                emptyView.setVisibility(View.VISIBLE);
+                mSpinner.setVisibility(View.GONE);
+                mCartViewModel.mOrderLiveData.removeObservers(this);
+                mItemAdapter.updateList(new ArrayList<>());
+            }else{
+                mCartViewModel.mOrderLiveData.removeObservers(this);
+                Toast.makeText(getActivity(),"Order Not Placed",Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public void refresh(){
@@ -131,10 +141,12 @@ public class CartFragment extends Fragment implements ItemAdapter.ItemClickListe
                     priceTextView.setVisibility(View.GONE);
                     textView.setVisibility(View.VISIBLE);
                     purchaseBtn.setVisibility(View.GONE);
-                    emptyView.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
                     mSpinner.setVisibility(View.GONE);
                 }
             });
+        }else{
+            emptyView.setVisibility(View.VISIBLE);
         }
     }
 
