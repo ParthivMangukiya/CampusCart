@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.parthiv.shopper.item.ItemFragment;
+import com.parthiv.shopper.order.OrderListFragment;
 
 public class MainActivityPagerAdapter extends FragmentPagerAdapter {
 
@@ -17,6 +18,8 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter {
         switch (position){
             case 0:
                 return ItemFragment.newInstance();
+            case 1:
+                return OrderListFragment.newInstance();
             default:
                 return new Fragment();
         }
@@ -24,7 +27,7 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 1;
+        return 2;
     }
 
     @Override

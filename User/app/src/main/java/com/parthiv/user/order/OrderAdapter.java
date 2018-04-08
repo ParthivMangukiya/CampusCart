@@ -1,4 +1,4 @@
-package com.parthiv.shopper.order;
+package com.parthiv.user.order;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -13,12 +13,12 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.parthiv.shopper.R;
-import com.parthiv.shopper.model.Order;
+import com.parthiv.user.R;
+import com.parthiv.user.model.Order;
 
 import java.util.List;
 
-public class OrderAdapter extends RecyclerView.Adapter<com.parthiv.shopper.order.OrderAdapter.ContactsViewHolder> {
+public class OrderAdapter extends RecyclerView.Adapter<com.parthiv.user.order.OrderAdapter.ContactsViewHolder> {
 
     private static final String TAG = "OrderAdapter";
 
@@ -27,10 +27,10 @@ public class OrderAdapter extends RecyclerView.Adapter<com.parthiv.shopper.order
     }
 
     private List<Order> itemList;
-    private com.parthiv.shopper.item.ItemAdapter.ItemClickListener mItemClickListener;
+    private com.parthiv.user.item.ItemAdapter.ItemClickListener mItemClickListener;
     private Context mContext;
 
-    public OrderAdapter(List<Order> itemList, com.parthiv.shopper.item.ItemAdapter.ItemClickListener itemClickListener,Context context) {
+    public OrderAdapter(List<Order> itemList, com.parthiv.user.item.ItemAdapter.ItemClickListener itemClickListener,Context context) {
         this.itemList = itemList;
         mItemClickListener = itemClickListener;
         mContext = context;
@@ -38,7 +38,7 @@ public class OrderAdapter extends RecyclerView.Adapter<com.parthiv.shopper.order
 
     @NonNull
     @Override
-    public com.parthiv.shopper.order.OrderAdapter.ContactsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public com.parthiv.user.order.OrderAdapter.ContactsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_order, parent, false);
         return new ContactsViewHolder(itemView);

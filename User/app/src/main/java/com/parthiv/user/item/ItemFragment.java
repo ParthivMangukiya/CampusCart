@@ -55,8 +55,6 @@ public class ItemFragment extends Fragment implements ItemAdapter.ItemClickListe
         return rootView;
     }
 
-
-
     @Override
     public void onItemClick(long id) {
         Intent intent = new Intent(getActivity(),ItemDetailActivity.class);

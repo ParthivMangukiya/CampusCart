@@ -20,11 +20,10 @@ import lombok.NoArgsConstructor;
 public class Order {
     private long id;
     private long uid;
-    //Todo: add username to api
-    private String userName;
+    private String username;
     private int otp;
     private String status;
     private double amount;
     private int color;
-    private List<Long> ids;
+    private List<Long> items;
 }

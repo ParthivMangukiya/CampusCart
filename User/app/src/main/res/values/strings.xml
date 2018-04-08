@@ -8,6 +8,7 @@
     <string name="noItem">No Item</string>
     <string name="text_cart">Cart</string>
     <string name="sign_out">Sign Out</string>
+    <string name="text_orders">Order</string>
     <string-array name="location_array">
         <item>Bhabha Bhavan</item>
         <item>Vivekanand Bhavan</item>

@@ -42,6 +42,7 @@ public class CartFragment extends Fragment implements ItemAdapter.ItemClickListe
     private Button purchaseBtn;
     private double total;
     private int color;
+    TextView textView;
     Spinner mSpinner;
     private static final String TAG = "CartFragment";
 
@@ -63,6 +64,7 @@ public class CartFragment extends Fragment implements ItemAdapter.ItemClickListe
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.location_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        textView = rootView.findViewById(R.id.textView15);
         mSpinner.setAdapter(adapter);
         mSpinner.setOnItemSelectedListener(this);
         itemRecycler = rootView.findViewById(R.id.item_recycler_view);
@@ -73,6 +75,10 @@ public class CartFragment extends Fragment implements ItemAdapter.ItemClickListe
         priceTextView = rootView.findViewById(R.id.priceTextView);
         mCartViewModel = ViewModelProviders.of(this).get(CartViewModel.class);
         purchaseBtn.setVisibility(View.GONE);
+        emptyView.setVisibility(View.VISIBLE);
+        textView.setVisibility(View.GONE);
+        priceTextView.setVisibility(View.GONE);
+        mSpinner.setVisibility(View.GONE);
         purchaseBtn.setOnClickListener((v) -> {
             Random rnd = new Random();
             int otp = rnd.nextInt(999999 - 111111 + 1) + 111111;
@@ -82,28 +88,26 @@ public class CartFragment extends Fragment implements ItemAdapter.ItemClickListe
             while(st.hasMoreTokens()){
                 ids.add(Long.parseLong(st.nextToken()));
             }
+            long uid = SharedPreferenceUtils.getLongPreference(getActivity(),"uid",0);
             //Todo: add uid
-            Order order = new Order(0,0,otp,total,color,ids);
+            Order order = new Order(0,uid,"",otp,"pending",total,color,ids);
 
             mCartViewModel.postOrder(order).observe(this, jsonObjectResource -> {
                 if(jsonObjectResource!= null && jsonObjectResource.status == Resource.Status.SUCCESS){
                     Toast.makeText(getActivity(),"Order Placed",Toast.LENGTH_LONG).show();
                     SharedPreferenceUtils.setStringPreference(getActivity(),"ids","");
+                    mItemAdapter.updateList(new ArrayList<>());
                 }else{
                     Toast.makeText(getActivity(),"Order Not Placed",Toast.LENGTH_LONG).show();
                 }
             });
         });
-        mCartViewModel = ViewModelProviders.of(this).get(CartViewModel.class);
+        refresh();
+
         return rootView;
     }
 
-
-
-    @SuppressLint("DefaultLocale")
-    @Override
-    public void onResume() {
-        super.onResume();
+    public void refresh(){
         String savedString = SharedPreferenceUtils.getStringPreference(getActivity(),"ids");
         Log.d(TAG,savedString);
         if(savedString.length() > 0){
@@ -120,11 +124,27 @@ public class CartFragment extends Fragment implements ItemAdapter.ItemClickListe
                     priceTextView.setText(String.format("₹ %.2f",total));
                     purchaseBtn.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.GONE);
+                    priceTextView.setVisibility(View.VISIBLE);
+                    textView.setVisibility(View.GONE);
+                    mSpinner.setVisibility(View.VISIBLE);
                 }else{
-                    emptyView.setVisibility(View.VISIBLE);
+                    priceTextView.setVisibility(View.GONE);
+                    textView.setVisibility(View.VISIBLE);
+                    purchaseBtn.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.GONE);
+                    mSpinner.setVisibility(View.GONE);
                 }
             });
         }
+    }
+
+
+
+    @SuppressLint("DefaultLocale")
+    @Override
+    public void onResume() {
+        super.onResume();
+        refresh();
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.parthiv.user.cart.CartFragment;
 import com.parthiv.user.item.ItemFragment;
+import com.parthiv.user.order.OrderListFragment;
 
 public class MainActivityPagerAdapter extends FragmentPagerAdapter {
 
@@ -20,6 +21,8 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter {
                 return ItemFragment.newInstance();
             case 1:
                 return CartFragment.newInstance();
+            case 2:
+                return OrderListFragment.newInstance();
             default:
                 return new Fragment();
         }
@@ -27,7 +30,7 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Override

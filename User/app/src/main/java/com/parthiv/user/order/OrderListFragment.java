@@ -1,4 +1,4 @@
-package com.parthiv.shopper.order;
+package com.parthiv.user.order;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -12,11 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.parthiv.shopper.R;
-import com.parthiv.shopper.Utils.Resource;
-import com.parthiv.shopper.item.ItemAdapter;
-import com.parthiv.shopper.model.Order;
+import com.parthiv.user.R;
+import com.parthiv.user.Utils.Resource;
+import com.parthiv.user.Utils.SharedPreferenceUtils;
+import com.parthiv.user.item.ItemAdapter;
+import com.parthiv.user.model.Order;
 
 import java.util.ArrayList;
 
@@ -48,7 +48,8 @@ public class OrderListFragment extends Fragment implements ItemAdapter.ItemClick
         orderRecycler.setItemAnimator(new DefaultItemAnimator());
         orderRecycler.setAdapter(mOrderAdapter);
         mOrderViewModel = ViewModelProviders.of(this).get(OrderViewModel.class);
-        mOrderViewModel.getOrderLiveData().observe(this, listResource -> {
+        long uid = SharedPreferenceUtils.getLongPreference(getActivity(),"uid",0);
+        mOrderViewModel.getOrderLiveData(uid).observe(this, listResource -> {
             if (listResource.status == Resource.Status.SUCCESS) {
                 mOrderAdapter.updateList(listResource.data);
                 Log.d(TAG,listResource.data.get(0).toString());

@@ -1,14 +1,14 @@
-package com.parthiv.shopper.order;
+package com.parthiv.user.order;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.ViewModel;
 import android.util.Log;
 
-import com.parthiv.shopper.Utils.Resource;
-import com.parthiv.shopper.api.APIClient;
-import com.parthiv.shopper.model.Item;
-import com.parthiv.shopper.model.Order;
+import com.parthiv.user.Utils.Resource;
+import com.parthiv.user.api.APIClient;
+import com.parthiv.user.model.Item;
+import com.parthiv.user.model.Order;
 
 import org.reactivestreams.Publisher;
 

@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.parthiv.user.Utils.Resource;
+import com.parthiv.user.Utils.SharedPreferenceUtils;
 import com.parthiv.user.model.User;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         user.setName(fuser.getDisplayName());
         mMainActivityViewModel.postUser(user).observe(this,userResource -> {
             if(userResource.status == Resource.Status.SUCCESS){
-                Toast.makeText(this,"User Created",Toast.LENGTH_LONG).show();
+                SharedPreferenceUtils.setLongPreference(this,"uid",userResource.data.getId());
             }else{
                 Toast.makeText(this,"User Not Created",Toast.LENGTH_LONG).show();
             }
@@ -62,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
                             break;
                         case R.id.action_cart:
                             viewPager.setCurrentItem(1);
+                            break;
+                        case R.id.action_orders:
+                            viewPager.setCurrentItem(2);
                             break;
                     }
                     return true;

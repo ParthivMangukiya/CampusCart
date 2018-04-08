@@ -14,4 +14,12 @@
         android:icon="@drawable/ic_local_grocery_store_black_24dp"
         android:title="@string/text_cart"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_orders"
+        android:enabled="true"
+        android:icon="@drawable/ic_local_grocery_store_black_24dp"
+        android:title="@string/text_orders"
+        app:showAsAction="ifRoom" />
+
 </menu>

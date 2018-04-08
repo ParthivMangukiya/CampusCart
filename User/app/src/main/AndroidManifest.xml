@@ -24,6 +24,8 @@
         <activity android:name=".MainActivity"/>
         <activity android:name=".item.ItemDetailActivity">
         </activity>
+        <activity android:name=".order.OrderDetailActivity">
+        </activity>
     </application>
 
 </manifest>

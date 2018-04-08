@@ -26,12 +26,18 @@ public interface CampusCartApi {
     @GET("items")
     Observable<List<Item>> getItems();
 
+    @GET("users/{id}/orders")
+    Observable<List<Order>> getOrdersByUserId(@Path("id") long id);
+
+    @GET("orders/{id}")
+    Observable<Order> getOrderByOrderId(@Path("id") long id);
+
     @GET("items")
     Observable<List<Item>> getItemsByIds(@Query("ids") String ids);
 
     @GET("items/{id}")
     Observable<Item> getItemById(@Path("id") long id);
 
-    @GET("users")
-    Observable<User> postUser(User user);
+    @POST("users")
+    Observable<User> postUser(@Body User user);
 }

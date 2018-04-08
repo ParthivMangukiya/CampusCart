@@ -30,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.action_items:
                             viewPager.setCurrentItem(0);
                             break;
+                        case R.id.action_orders:
+                            viewPager.setCurrentItem(1);
+                            break;
                     }
                     return true;
                 });

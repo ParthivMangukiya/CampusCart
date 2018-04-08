@@ -1,4 +1,4 @@
-package com.parthiv.shopper.order;
+package com.parthiv.user.order;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
@@ -9,15 +9,14 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
-import com.parthiv.shopper.R;
-import com.parthiv.shopper.Utils.Resource;
-import com.parthiv.shopper.item.ItemAdapter;
-import com.parthiv.shopper.item.ItemDetailActivity;
-import com.parthiv.shopper.model.Item;
-import com.parthiv.shopper.model.Order;
+import com.parthiv.user.R;
+import com.parthiv.user.Utils.Resource;
+import com.parthiv.user.item.ItemAdapter;
+import com.parthiv.user.item.ItemDetailActivity;
+import com.parthiv.user.model.Item;
+import com.parthiv.user.model.Order;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,6 @@ public class OrderDetailActivity extends AppCompatActivity implements ItemAdapte
     private OrderDetailViewModel mOrderDetailViewModel;
     private TextView emptyView;
     private TextView priceTextView;
-    private Button packBtn;
     private Order order;
 
     @SuppressLint("DefaultLocale")
@@ -45,14 +43,8 @@ public class OrderDetailActivity extends AppCompatActivity implements ItemAdapte
         itemRecycler.setLayoutManager(new LinearLayoutManager(this));
         itemRecycler.setItemAnimator(new DefaultItemAnimator());
         itemRecycler.setAdapter(mItemAdapter);
-        packBtn = findViewById(R.id.packBtn);
         priceTextView = findViewById(R.id.priceTextView);
         mOrderDetailViewModel = ViewModelProviders.of(this).get(OrderDetailViewModel.class);
-        packBtn.setVisibility(View.GONE);
-        packBtn.setOnClickListener((v) -> {
-            order.setStatus("packed");
-            //mOrderDetailViewModel.patchOrder(order).observe();
-        });
         mOrderDetailViewModel.getOrderLiveData(id).observe(this,orderResource -> {
             if(orderResource.status == Resource.Status.SUCCESS){
                 order = orderResource.data;
@@ -65,7 +57,6 @@ public class OrderDetailActivity extends AppCompatActivity implements ItemAdapte
                 mOrderDetailViewModel.getItemLiveData(str.toString().substring(0,str.length()-1)).observe(this,listResource -> {
                     if(listResource.status == Resource.Status.SUCCESS){
                         mItemAdapter.updateList(listResource.data);
-                        packBtn.setVisibility(View.VISIBLE);
                         emptyView.setVisibility(View.GONE);
                     }else{
                         emptyView.setVisibility(View.VISIBLE);

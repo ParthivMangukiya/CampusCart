@@ -78,8 +78,10 @@ public class ItemDetailActivity extends AppCompatActivity {
             if(item != null){
                 if(!ids.contains(item.getId())){
                     ids.add(item.getId());
+                    addToCartButton.setText("Remove From Cart");
                 }else{
                     ids.remove(item.getId());
+                    addToCartButton.setText("Add to Cart");
                 }
             }
             Log.d(TAG, String.valueOf(ids));
