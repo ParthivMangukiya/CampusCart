@@ -47,7 +47,7 @@ class DbOperation {
     public function getUserByUserId($id) {
         $stmt = $this->con->prepare("SELECT * FROM user WHERE id = ?");
         if($stmt){
-            $stmt->bind_param("s", $id);
+            $stmt->bind_param("i", $id);
             $stmt->execute();
             $student = $stmt->get_result();
             $stmt->close();
@@ -60,7 +60,7 @@ class DbOperation {
     public function getUserIdByEmailId($email) {
         $stmt = $this->con->prepare("SELECT id FROM user WHERE email = ?");
         if($stmt){
-            $stmt->bind_param("s", $id);
+            $stmt->bind_param("s", $email);
             $stmt->execute();
             $student = $stmt->get_result();
             $stmt->close();
@@ -71,7 +71,7 @@ class DbOperation {
     }
 
     public function getOrderById($id) {
-        $stmt = $this->con->prepare("SELECT * FROM orders WHERE id = ?");
+        $stmt = $this->con->prepare("SELECT orders.id,uid,otp,amount,color,status,user.name as username FROM orders JOIN user on orders.uid=user.id WHERE orders.id = ?");
         if($stmt){
             $stmt->bind_param("i", $id);
             $stmt->execute();
@@ -102,6 +102,28 @@ class DbOperation {
         $students = $stmt->get_result();
         $stmt->close();
         return $students;
+    }
+
+    public function getAllOrders() {
+        $stmt = $this->con->prepare("SELECT orders.id,uid,otp,amount,color,status,user.name as username FROM orders JOIN user on orders.uid=user.id");
+        $stmt->execute();
+        $students = $stmt->get_result();
+        $stmt->close();
+        return $students;
+    }
+
+    public function getAllOrdersById($id) {
+        $stmt = $this->con->prepare("SELECT orders.id,uid,otp,amount,color,status,user.name as username FROM orders JOIN user on orders.uid=user.id WHERE user.id = ? ");
+        if($stmt){
+            $stmt->bind_param("i", $id);
+        	$stmt->execute();
+        	$students = $stmt->get_result();
+        	$stmt->close();
+        	return $students;
+    	}
+    	else{
+    		return false;
+    	}
     }
 
     public function getAllItems() {
@@ -142,11 +164,11 @@ class DbOperation {
         return $res;
     }
 
-    public function createOrder($uid, $otp, $amount, $color) {
+    public function createOrder($uid, $otp, $amount, $color, $status) {
         $res = [];
        
-            $stmt = $this->con->prepare("INSERT INTO orders(uid, otp, amount, color) values(?, ?, ?, ?)");
-            $stmt->bind_param("iidi",$uid, $otp, $amount,$color);
+            $stmt = $this->con->prepare("INSERT INTO orders(uid, otp, amount, color, status) values(?, ?, ?, ?, ?)");
+            $stmt->bind_param("iidis",$uid, $otp, $amount,$color, $status);
             $result = $stmt->execute();
             $res['id'] = $stmt->insert_id;
             $stmt->close();
@@ -160,11 +182,52 @@ class DbOperation {
         return $res;
     }
 
+    public function updateOrder($id,$uid, $otp, $amount, $color, $status) {
+        $res = [];
+       
+            $stmt = $this->con->prepare("UPDATE orders set uid=?, otp=?, amount=?, color=?, status=? WHERE id=?");
+            if($stmt){
+            $stmt->bind_param("iidisi", $uid, $otp, $amount, $color, $status, $id);
+            $result = $stmt->execute();
+            $res['id'] = $stmt->insert_id;
+            $stmt->close();
+            if ($result) {
+                $res['error'] = 0;
+            } else {
+                $res['error'] = 1;
+            }
+        
+
+        return $res;
+    }else
+    {
+    	return false;
+    }
+    }
+
     public function createOrderItems($id, $iid) {
         $res = [];
        		
             $stmt = $this->con->prepare("INSERT INTO order_items(id, iid) values(?, ?)");
             $stmt->bind_param("ii",$id, $iid);
+            $result = $stmt->execute();
+            //$res['id'] = $stmt->insert_id;
+            $stmt->close();
+            if ($result) {
+                $res['error'] = 0;
+            } else {
+                $res['error'] = 1;
+            }
+        
+
+        return $res;
+    }
+
+    public function updateOrderItems($id, $iid) {
+        $res = [];
+       		
+            $stmt = $this->con->prepare("UPDATE order_items set iid=? WHERE id = ?");
+            $stmt->bind_param("ii",$iid, $id);
             $result = $stmt->execute();
             //$res['id'] = $stmt->insert_id;
             $stmt->close();
