@@ -3,12 +3,15 @@ package com.parthiv.shopper.item;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -25,10 +28,33 @@ public class ItemFragment extends Fragment implements ItemAdapter.ItemClickListe
     private ItemAdapter mItemAdapter;
     private ItemViewModel mItemViewModel;
     private TextView emptyView;
-    private FloatingActionButton addButton;
 
     public ItemFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_item_fragment, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_add:
+                onAddClick();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public static ItemFragment newInstance() {
@@ -38,6 +64,7 @@ public class ItemFragment extends Fragment implements ItemAdapter.ItemClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.fragment_item, container, false);
         mItemAdapter = new ItemAdapter(new ArrayList<Item>(),this);
         emptyView = rootView.findViewById(R.id.txt_no_items);
@@ -54,12 +81,12 @@ public class ItemFragment extends Fragment implements ItemAdapter.ItemClickListe
                 emptyView.setVisibility(View.VISIBLE);
             }
         });
-        addButton = rootView.findViewById(R.id.addButton);
-        addButton.setOnClickListener((v)->onFabClick());
         return rootView;
     }
 
-    private void onFabClick() {
+
+
+    private void onAddClick() {
         Intent intent = new Intent(getActivity(), ItemAddActivity.class);
         startActivity(intent);
     }

@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">User</string>
+    <string name="sign_in_cancelled">Sign in cancelled</string>
+    <string name="no_internet_connection">no internet connection</string>
+    <string name="unknown_error">Unknown Error</string>
+    <string name="text_items">Inventory</string>
+    <string name="internet_permission">Add Internet</string>
+    <string name="noItem">No Item</string>
+    <string name="text_cart">Cart</string>
+    <string name="sign_out">Sign Out</string>
+    <string-array name="location_array">
+        <item>Bhabha Bhavan</item>
+        <item>Vivekanand Bhavan</item>
+        <item>New CRC</item>
+        <item>Old CRC</item>
+    </string-array>
 </resources>

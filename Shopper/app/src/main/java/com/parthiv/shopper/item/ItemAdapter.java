@@ -1,7 +1,8 @@
 package com.parthiv.shopper.item;
 
+import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,12 +36,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ContactsViewHo
         return new ContactsViewHolder(itemView);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull ContactsViewHolder holder, int position) {
         Item item = itemList.get(position);
         holder.nameTextView.setText(item.getName());
         holder.categoryTextView.setText(item.getCategory());
-        holder.mConstraintLayout.setOnClickListener((v)-> mItemClickListener.onItemClick(item.getId()));
+        holder.priceTextView.setText(String.format("₹ %.2f",item.getPrice()));
+        holder.mCardView.setOnClickListener((v)-> mItemClickListener.onItemClick(item.getId()));
     }
 
     @Override
@@ -52,13 +55,15 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ContactsViewHo
 
         TextView nameTextView;
         TextView categoryTextView;
-        ConstraintLayout mConstraintLayout;
+        TextView priceTextView;
+        CardView mCardView;
 
         public ContactsViewHolder(View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.name);
-            categoryTextView = itemView.findViewById(R.id.category);
-            mConstraintLayout = itemView.findViewById(R.id.container);
+            categoryTextView = itemView.findViewById(R.id.status);
+            mCardView = itemView.findViewById(R.id.container);
+            priceTextView = itemView.findViewById(R.id.amount);
         }
     }
 

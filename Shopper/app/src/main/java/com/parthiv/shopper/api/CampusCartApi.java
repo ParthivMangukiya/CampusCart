@@ -1,6 +1,7 @@
 package com.parthiv.shopper.api;
 
 import com.parthiv.shopper.model.Item;
+import com.parthiv.shopper.model.Order;
 
 import org.json.JSONObject;
 
@@ -19,6 +20,9 @@ public interface CampusCartApi {
 
     @GET("items")
     Observable<List<Item>> getItems();
+
+    @GET("orders")
+    Observable<List<Order>> getOrders();
 
     @GET("items/{id}")
     Observable<Item> getItemById(@Path("id") long id);
