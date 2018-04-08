@@ -391,7 +391,7 @@ $app->post('/orders', function (Request $request, Response $response) {
     $amount = getValueOrDefault('amount',$parsedBody, "");
     $color = getValueOrDefault('color', $parsedBody, "");
     $status = getValueOrDefault('status',$parsedBody, "pending");
-    $iids = getValueOrDefault('ids',$parsedBody, "");
+    $iids = getValueOrDefault('items',$parsedBody, "");
     //Creating a DbOperation object
     $db = new DbOperation();
 
